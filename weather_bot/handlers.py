@@ -1,6 +1,6 @@
 from main import bot, dp
 from config import adminID, WEATHER_ТOKEN
-from keyboard import kb_client
+from client_keyboard import kb_client
 from states import is_city_name_given
 
 from aiogram.types import Message
@@ -64,23 +64,27 @@ async def tell_city_name (message: Message, state: FSMContext):
     data = await state.get_data()
     city_name = data.get("city_name")
     if city_name != None:
-        await message.answer (f"Ваш город: {city_name}")
+        r = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={WEATHER_ТOKEN}&lang=ru&units=metric")
+        data_r = r.json()
+        city = data_r["name"]
+        await message.answer (f"Ваш город: {city}")
     else:
         await message.answer ("Я еще не знаю ваш город. \nНапишите /change_city для того, чтобы установить город")
     logger.info("tell_city_name function is done working")
 
 
 @dp.message_handler(commands=["get_weather"], state="*")
-async def get_weather (message: Message, state = "city_name_given"):
+async def get_weather (message: Message, state: FSMContext):
     if await state.get_state() == "is_city_name_given:city_name_given":
         logger.info(f"state is {await state.get_state()}")
+        data = await state.get_data()
         city_name = str(data.get("city_name"))
         r = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={WEATHER_ТOKEN}&lang=ru&units=metric")
-        data = r.json()
-        city = data["name"]
-        condition = data["weather"][0]["description"]
-        temp = data["main"]["temp"]
-        await message.answer(f"В городе {city} {condition}, {temp}°C")
+        data_r = r.json()
+        city = data_r["name"]
+        condition = data_r["weather"][0]["description"]
+        temp = data_r["main"]["temp"]
+        await message.answer(f"Сейчас в городе {city} {condition}, {int(temp)}°C")
     else:
         await message.answer ("Я еще не знаю ваш город. \nНапишите /change_city для того, чтобы установить город")
     logger.info("get_weather function is done working")
