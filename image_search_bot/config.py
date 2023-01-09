@@ -1,3 +1,3 @@
-BOT_TOKEN = "5785879552:AAFEZgRiCI-R7nirUHDtchILKW5PaTEW7uc"
+BOT_TOKEN = "###"
 
-adminID = 336235112
+adminID = ###
