@@ -1,5 +1,5 @@
-BOT_TOKEN = "5785879552:AAFEZgRiCI-R7nirUHDtchILKW5PaTEW7uc"
+BOT_TOKEN = "###"
 
-adminID = 336235112
+adminID = ###
 
-WEATHER_ТOKEN = "b2d56f1d8fd95359ca6ed8d8cc36c0db"
+WEATHER_ТOKEN = "###"
